@@ -51,6 +51,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\MemeCommand.cs" />
+    <Compile Include="Classes\SalveCommand.cs" />
+    <Compile Include="Classes\UpTimeCommand.cs" />
+    <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="MediaPlayer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -73,7 +77,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="MemesSounds\Cabess.mp3" />
+    <Content Include="MemesSounds\cabess.mp3" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="WMPLib">

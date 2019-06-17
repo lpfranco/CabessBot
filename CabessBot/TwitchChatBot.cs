@@ -1,4 +1,7 @@
-﻿using System;
+﻿using CabessBot.Classes;
+using CabessBot.Interfaces;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using TwitchLib;
 using TwitchLib.Events.Client;
@@ -10,61 +13,47 @@ namespace CabessBot
 {
     internal class TwitchChatBot
     {
-        readonly ConnectionCredentials credentials = new ConnectionCredentials(TwitchInfo.BotUserName, TwitchInfo.BotToken);
-        TwitchClient client;
+        public ConnectionCredentials Credentials { private get; set; }
+        private List<ICommand> Commands { get; set; }
+        private TwitchClient TwitchClient { get; set; }
+
+
+        public TwitchChatBot()
+        {
+            Credentials = new ConnectionCredentials(TwitchInfo.BotUserName, TwitchInfo.BotToken);
+            TwitchClient = new TwitchClient(Credentials, TwitchInfo.ChannelName);
+
+            Commands = new List<ICommand>();
+            Commands.Add(new UpTimeCommand(TwitchClient));
+            Commands.Add(new SalveCommand(TwitchClient));
+            Commands.Add(new MemeCommand("cabess"));
+        }
 
         internal void Connect()
         {
             Console.WriteLine("Connecting...");
-            client = new TwitchClient(credentials, TwitchInfo.ChannelName);
 
-            client.ChatThrottler = new MessageThrottler(20/2, TimeSpan.FromSeconds(30));
+            TwitchClient.ChatThrottler = new MessageThrottler(20, TimeSpan.FromSeconds(30));
 
-            client.OnLog += Client_OnLog;
-            client.OnConnectionError += Client_OnConnectionError;
-            client.OnMessageReceived += Client_OnMessageReceived;
+            TwitchClient.OnLog += Client_OnLog;
+            TwitchClient.OnConnectionError += Client_OnConnectionError;
+            TwitchClient.OnMessageReceived += Client_OnMessageReceived;
+            TwitchClient.OnConnected += Client_OnConnected;
 
-            client.Connect();
+            TwitchClient.Connect();
 
             TwitchAPI.Settings.ClientId = TwitchInfo.ClientId;
+        }
+        private void Client_OnConnected(object sender, OnConnectedArgs e)
+        {
+            TwitchClient.SendMessage("Confira todos os comandos com !Comandos e todos os Memes com !Memes");
         }
 
         private void Client_OnMessageReceived(object sender, OnMessageReceivedArgs e)
         {
-            var mp = new MediaPlayer();
-            if (e.ChatMessage.Message.StartsWith("!salve", StringComparison.InvariantCultureIgnoreCase))
-                client.SendMessage($"Tá Salvo {e.ChatMessage.DisplayName}!");
-            else if(e.ChatMessage.Message.StartsWith("!uptime", StringComparison.InvariantCultureIgnoreCase))
-            {
-                var upTime = GetUpTime().ToString();
-                if (!string.IsNullOrWhiteSpace(upTime))
-                    client.SendMessage(GetUpTime().ToString().Substring(0, 8));
-                else
-                    client.SendMessage("A stream está offline bro!");
-            }
-            else if(e.ChatMessage.Message.Equals("!meme cabess"))
-            {
-                mp.Play("Cabess");
-            }
-                            
-        }
-
-        private TimeSpan? GetUpTime()
-        {
-            string userId = GetUserId(TwitchInfo.ChannelName);
-            if (string.IsNullOrWhiteSpace(userId))
-                return null;
-
-            return TwitchAPI.Streams.v5.GetUptime(userId).Result;
-        }
-
-        private string GetUserId(string userName)
-        {
-            User[] lstUsers = TwitchAPI.Users.v5.GetUserByName(userName).Result.Matches;
-            if (lstUsers == null || lstUsers.Length == 0)
-                return null;
-
-            return lstUsers.FirstOrDefault().Id;
+            ICommand command = Commands.FirstOrDefault(x => x.CommandDescription.Equals(e.ChatMessage.Message));
+            if (command != null)
+               command.Execute(e, command.MemeSong);               
         }
 
         private void Client_OnLog(object sender, OnLogArgs e)
@@ -79,7 +68,7 @@ namespace CabessBot
 
         internal void Disconnect()
         {
-            client.Disconnect();
+            TwitchClient.Disconnect();
         }
     }
 }
