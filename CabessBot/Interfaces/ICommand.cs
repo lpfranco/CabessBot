@@ -9,7 +9,7 @@ namespace CabessBot.Interfaces
         OnMessageReceivedArgs Event { get; set; }
         TwitchClient TwitchClient { get; set; }
         string MemeSong { get; set; }
-
-        void Execute(OnMessageReceivedArgs e, string memeSong = null);
+        string GifFile { get; set; }
+        void Execute(OnMessageReceivedArgs e, string memeSong = null, string gifFile = null);
     }
 }

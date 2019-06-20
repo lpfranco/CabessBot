@@ -8,7 +8,7 @@ using TwitchLib;
 using TwitchLib.Events.Client;
 using TwitchLib.Models.Client;
 
-namespace CabessBot.Classes
+namespace CabessBot.Commands
 {
     public class MemeCommand : ICommand
     {
@@ -18,6 +18,7 @@ namespace CabessBot.Classes
 
         private MediaPlayer MediaPlayer { get; set; }
         public string MemeSong { get; set; }
+        public string GifFile { get; set; }
 
         public MemeCommand(string memeSong)
         {
@@ -26,7 +27,7 @@ namespace CabessBot.Classes
 
             MediaPlayer = new MediaPlayer();
         }
-        public void Execute(OnMessageReceivedArgs e, string memeSong)
+        public void Execute(OnMessageReceivedArgs e, string memeSong, string gifFile = null)
         {
             MediaPlayer.Play(memeSong);
         }

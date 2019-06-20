@@ -10,7 +10,7 @@ using TwitchLib.Events.Client;
 using TwitchLib.Models.API.v5.Users;
 using TwitchLib.Models.Client;
 
-namespace CabessBot.Classes
+namespace CabessBot.Commands
 {
     public class UpTimeCommand : ICommand
     {
@@ -18,6 +18,8 @@ namespace CabessBot.Classes
         public OnMessageReceivedArgs Event { get; set; }
         public TwitchClient TwitchClient { get; set; }
         public string MemeSong { get; set; }
+        public string GifFile { get; set; }
+
 
         public UpTimeCommand(TwitchClient twitchClient)
         {
@@ -25,7 +27,7 @@ namespace CabessBot.Classes
             TwitchClient = twitchClient;
         }
 
-        public void Execute(OnMessageReceivedArgs e, string memeSong = null)
+        public void Execute(OnMessageReceivedArgs e, string memeSong = null, string gifFile = null)
         {
             var upTime = GetUpTime().ToString();
             if (!string.IsNullOrWhiteSpace(upTime))

@@ -1,4 +1,4 @@
-﻿using CabessBot.Classes;
+﻿using CabessBot.Commands;
 using CabessBot.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -27,6 +27,9 @@ namespace CabessBot
             Commands.Add(new UpTimeCommand(TwitchClient));
             Commands.Add(new SalveCommand(TwitchClient));
             Commands.Add(new MemeCommand("cabess"));
+            Commands.Add(new MemeCommand("aipaipara"));
+            Commands.Add(new GifCommand("blowingmind"));
+            Commands.Add(new GifCommand("truestory"));
         }
 
         internal void Connect()
@@ -53,7 +56,7 @@ namespace CabessBot
         {
             ICommand command = Commands.FirstOrDefault(x => x.CommandDescription.Equals(e.ChatMessage.Message));
             if (command != null)
-               command.Execute(e, command.MemeSong);               
+               command.Execute(e, command.MemeSong, command.GifFile);               
         }
 
         private void Client_OnLog(object sender, OnLogArgs e)

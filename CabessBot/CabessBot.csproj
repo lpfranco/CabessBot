@@ -37,6 +37,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,9 +53,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\MemeCommand.cs" />
-    <Compile Include="Classes\SalveCommand.cs" />
-    <Compile Include="Classes\UpTimeCommand.cs" />
+    <Compile Include="Commands\GifCommand.cs" />
+    <Compile Include="Commands\MemeCommand.cs" />
+    <Compile Include="Commands\SalveCommand.cs" />
+    <Compile Include="Commands\UpTimeCommand.cs" />
+    <Compile Include="GifAnimator.cs" />
     <Compile Include="Interfaces\ICommand.cs" />
     <Compile Include="MediaPlayer.cs" />
     <Compile Include="Program.cs" />
@@ -77,6 +81,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Gifs\blowingmind.gif" />
+    <Content Include="Gifs\truestory.gif" />
+    <Content Include="MemesSounds\aipaipara.mp3" />
     <Content Include="MemesSounds\cabess.mp3" />
   </ItemGroup>
   <ItemGroup>
